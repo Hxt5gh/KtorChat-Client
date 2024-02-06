@@ -17,6 +17,7 @@ import com.hxt5gh.frontend.BuildConfig
 import com.hxt5gh.frontend.data.remote.userDetail.UserDataDto
 import com.hxt5gh.frontend.data.remote.userDetail.UserDetailServiceImp
 import com.hxt5gh.frontend.domain.userDetailRepo.SaveUserRepositoryImp
+import com.onesignal.OneSignal
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -73,6 +74,9 @@ class GoogleSignInUi(
                     )
                 )
             }
+            //OneSignal
+            val externalId = auth.uid // You will supply the external user id to the OneSignal SDK
+            OneSignal.login(externalId.toString())
             SignInResult(
                 data = user?.run {
                     UserData(

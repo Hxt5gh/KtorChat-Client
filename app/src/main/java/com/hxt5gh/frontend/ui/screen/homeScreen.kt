@@ -1,104 +1,137 @@
 package com.hxt5gh.frontend.ui.screen
 
-import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.hxt5gh.frontend.data.remote.message.Message
-import com.hxt5gh.frontend.data.remote.socket.ChatSocketServiceImp
-import com.hxt5gh.frontend.data.remote.userDetail.UserDataDto
-import com.hxt5gh.frontend.presentation.message.GetMessagesViewModel
-import com.hxt5gh.frontend.presentation.signin.SignInViewModel
-import com.hxt5gh.frontend.presentation.signin.UserData
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromJsonElement
-import javax.inject.Inject
-import kotlin.math.log
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.hxt5gh.frontend.R
+import com.hxt5gh.frontend.presentation.signin.GoogleSignInUi
+import com.hxt5gh.frontend.ui.routes.Routes
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(data : UserData? , onClick : () -> Unit) {
+fun HomeScreen(googleSignInUiClient: GoogleSignInUi ,navHostController: NavHostController, onClick : () -> Unit) {
 
-    val viewModel : GetMessagesViewModel = hiltViewModel()
-    val signInViewModel : SignInViewModel = hiltViewModel()
+                   val navList = listOf(
+        BottomNavigationIcon(
+            title = "Chats",
+            selectedIcon = R.drawable.baseline_home_24,
+            unSelectedIcon = R.drawable.outline_home_24,
+            hasNews = false,
+            badgeCounter = null,
+            route = Routes.Chat_Screen
+        ),
+        BottomNavigationIcon(
+            title = "FindOne",
+            selectedIcon = R.drawable.baseline_explore_24,
+            unSelectedIcon = R.drawable.outline_explore_24,
+            hasNews = false,
+            route = Routes.Search_Screen
+        ),
+        BottomNavigationIcon(
+            title = "Profile",
+            selectedIcon = R.drawable.baseline_profile_24,
+            unSelectedIcon = R.drawable.outline_person_24,
+            hasNews = false,
+            route = Routes.Profile_Screen
+        )
+    )
+                   var selectItemState by rememberSaveable { mutableStateOf(0) }
 
-    val message = signInViewModel.messages.collectAsState()
+                   Scaffold(
+                       topBar = {
+                           TopAppBar(
+                               title = { Text(text = "Compose") },
+                               colors = TopAppBarDefaults.smallTopAppBarColors(
+                                   containerColor = MaterialTheme.colorScheme.primary ,
+                                   titleContentColor = MaterialTheme.colorScheme.onPrimary
+                               )
+                           )
+                       },
+                       bottomBar = {
+                           NavigationBar {
+                               navList.forEachIndexed { index, bottomNavigationIcon ->
+                                   NavigationBarItem(
+                                       label = { Text(text = bottomNavigationIcon.title.toString()) },
+                                       selected =  selectItemState == index,
+                                       onClick = {
+                                           selectItemState = index
+                                       },
+                                       icon = {
+                                           BadgedBox(
+                                               badge ={
+                                                   if(bottomNavigationIcon.badgeCounter != null)
+                                                   {
+                                                       Badge {
+                                                           Text(text = bottomNavigationIcon.badgeCounter.toString())
+                                                       }
+                                                   }else if(bottomNavigationIcon.hasNews){
+                                                       Badge()
+                                                   }
+                                               }) {
+                                               Icon(
+                                                   painter = painterResource(
+                                                       if (index == selectItemState)
+                                                       {
+                                                           bottomNavigationIcon.selectedIcon
+                                                       }else{
+                                                           //unselected
+                                                           bottomNavigationIcon.unSelectedIcon
+                                                       }
+                                                   ),
+                                                   contentDescription = bottomNavigationIcon.title
+                                               )
+                                           }
+                                       })
+                               }
+                           }
+                       }
+                   ) {padding ->
+                       Surface(
+                           modifier = Modifier
+                               .fillMaxSize()
+                               .padding(padding),
+                           color = MaterialTheme.colorScheme.background
+                       ) {
+                           if (selectItemState == 0)
+                           {
+                             ChatScreen()
+                           }else if (selectItemState == 1)
+                           {
+                              SearchScreen()
+                           }else if (selectItemState == 2)
+                           {
+                              ProfileScreen(googleSignInUiClient) {
+                                    onClick()
+                              }
+                           }
+                       }
+                   }
 
-    val auth = Firebase.auth
-
-
-    Column(modifier = Modifier.fillMaxSize() , verticalArrangement = Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally) {
-
-
-        if (data?.profilePic != null)
-        {
-            AsyncImage(model = data.profilePic , contentDescription ="" , modifier = Modifier.size(150.dp) )
-
-        }
-        if (data?.userName != null)
-        {
-            Text(text = "usename : ${data.userName} and user id : ${data.userId}")
-        }
-
-
-        Button(onClick = { onClick() }) {
-            Text(text = "LogQut")
-        }
-
-        Spacer(modifier = Modifier.size(20.dp))
-
-        Button(onClick = {
-            Log.d("TAG", "HomeScreen: message ${viewModel.getMessage("12")}")
-        }) {
-            Text(text = "getMessage")
-        }
-        Spacer(modifier = Modifier.size(20.dp))
-
-        Button(onClick = {
-                signInViewModel.init(auth.uid.toString())
-        }) {
-            Text(text = "connect")
-        }
-
-        Spacer(modifier = Modifier.size(20.dp))
-
-        Button(onClick = {
-            signInViewModel.sendMessage(
-                Message(
-                    message = "Test with Fake Star",
-                    senderId = auth.uid.toString(),
-                    recipientId = "james",
-                    timeStamp = System.currentTimeMillis()
-                )
-            )
-        }) {
-            Text(text = "sendMessage")
-        }
-        Spacer(modifier = Modifier.size(10.dp))
-
-
-        Text(text = "New Message -> ${message.value.message}" )
 
 
 
-    }
 
 }
 
@@ -106,5 +139,15 @@ fun HomeScreen(data : UserData? , onClick : () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun prev() {
-  //  HomeScreen(data = null,onClick = {})
+   // HomeScreen()
 }
+
+data class BottomNavigationIcon(
+    val title : String,
+    val selectedIcon : Int,
+    val unSelectedIcon : Int,
+    val hasNews : Boolean,
+    val badgeCounter : Int? = null,
+    val route  : String
+
+)
