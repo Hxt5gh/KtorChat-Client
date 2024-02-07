@@ -1,5 +1,6 @@
 package com.hxt5gh.frontend.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
@@ -20,10 +21,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.hxt5gh.frontend.R
 import com.hxt5gh.frontend.presentation.signin.GoogleSignInUi
 import com.hxt5gh.frontend.ui.routes.Routes
@@ -31,9 +38,11 @@ import com.hxt5gh.frontend.ui.routes.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(googleSignInUiClient: GoogleSignInUi ,navHostController: NavHostController, onClick : () -> Unit) {
+fun HomeScreen(googleSignInUi: GoogleSignInUi ,navController: NavHostController, onClick : () -> Unit) {
 
-                   val navList = listOf(
+
+
+    val navList = listOf(
         BottomNavigationIcon(
             title = "Chats",
             selectedIcon = R.drawable.baseline_home_24,
@@ -57,18 +66,19 @@ fun HomeScreen(googleSignInUiClient: GoogleSignInUi ,navHostController: NavHostC
             route = Routes.Profile_Screen
         )
     )
-                   var selectItemState by rememberSaveable { mutableStateOf(0) }
+
+    var selectItemState by rememberSaveable { mutableStateOf(0) }
 
                    Scaffold(
-                       topBar = {
-                           TopAppBar(
-                               title = { Text(text = "Compose") },
-                               colors = TopAppBarDefaults.smallTopAppBarColors(
-                                   containerColor = MaterialTheme.colorScheme.primary ,
-                                   titleContentColor = MaterialTheme.colorScheme.onPrimary
-                               )
-                           )
-                       },
+//                       topBar = {
+//                           TopAppBar(
+//                               title = { Text(text = "Compose") },
+//                               colors = TopAppBarDefaults.smallTopAppBarColors(
+//                                   containerColor = MaterialTheme.colorScheme.primary ,
+//                                   titleContentColor = MaterialTheme.colorScheme.onPrimary
+//                               )
+//                           )
+//                       },
                        bottomBar = {
                            NavigationBar {
                                navList.forEachIndexed { index, bottomNavigationIcon ->
@@ -111,8 +121,7 @@ fun HomeScreen(googleSignInUiClient: GoogleSignInUi ,navHostController: NavHostC
                        Surface(
                            modifier = Modifier
                                .fillMaxSize()
-                               .padding(padding),
-                           color = MaterialTheme.colorScheme.background
+                               .padding(padding)
                        ) {
                            if (selectItemState == 0)
                            {
@@ -122,24 +131,21 @@ fun HomeScreen(googleSignInUiClient: GoogleSignInUi ,navHostController: NavHostC
                               SearchScreen()
                            }else if (selectItemState == 2)
                            {
-                              ProfileScreen(googleSignInUiClient) {
+                              ProfileScreen(googleSignInUi) {
                                     onClick()
                               }
                            }
+
+
                        }
                    }
-
-
-
-
-
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun prev() {
-   // HomeScreen()
+   // HomeScreen( rememberNavController(), onClick = {})
 }
 
 data class BottomNavigationIcon(

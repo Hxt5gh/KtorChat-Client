@@ -139,6 +139,8 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
+
+
                     navigation(startDestination = Routes.Main_Screen , route = "home" ){
                         /* To Home Screen */
                         composable(route = "${Routes.Main_Screen}") {
@@ -157,7 +159,6 @@ class MainActivity : ComponentActivity() {
                                 }
                             })
                         }
-
                         /* To Chat Screen */
                         composable(route = "${Routes.Chat_Screen}") {
                             ChatScreen()
@@ -170,9 +171,9 @@ class MainActivity : ComponentActivity() {
                         composable(route = "${Routes.Profile_Screen}") {
                             ProfileScreen(googleSignInUiClient , onClick = {})
                         }
+
+
                     }
-
-
 
                 }
             }
