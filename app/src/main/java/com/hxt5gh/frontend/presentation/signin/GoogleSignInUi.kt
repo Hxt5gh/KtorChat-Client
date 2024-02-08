@@ -77,6 +77,7 @@ class GoogleSignInUi(
             //OneSignal
             val externalId = auth.uid // You will supply the external user id to the OneSignal SDK
             OneSignal.login(externalId.toString())
+            Log.d("debug", "signInWithIntent: ${user?.displayName}")
             SignInResult(
                 data = user?.run {
                     UserData(
@@ -95,7 +96,7 @@ class GoogleSignInUi(
             if (e is CancellationException) throw e
             SignInResult(
                 data = null,
-                errorMessage = null
+                errorMessage = e.message
             )
 
         }

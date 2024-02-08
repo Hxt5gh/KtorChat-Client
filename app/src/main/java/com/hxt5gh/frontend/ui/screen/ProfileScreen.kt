@@ -10,11 +10,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.hxt5gh.frontend.data.remote.message.Message
@@ -22,11 +27,15 @@ import com.hxt5gh.frontend.presentation.message.GetMessagesViewModel
 import com.hxt5gh.frontend.presentation.signin.GoogleSignInUi
 import com.hxt5gh.frontend.presentation.signin.SignInViewModel
 import com.hxt5gh.frontend.presentation.signin.UserData
+import com.hxt5gh.frontend.ui.routes.AuthScreen
+import com.hxt5gh.frontend.ui.routes.Graph
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun ProfileScreen(googleSignInUi: GoogleSignInUi , onClick : () -> Unit) {
+fun ProfileScreen(navController: NavHostController  , onRoute : (String) -> Unit) {
 
-    val data = googleSignInUi.getSignInUser()
+
 
     val viewModel : GetMessagesViewModel = hiltViewModel()
     val signInViewModel : SignInViewModel = hiltViewModel()
@@ -34,6 +43,19 @@ fun ProfileScreen(googleSignInUi: GoogleSignInUi , onClick : () -> Unit) {
     val message = signInViewModel.messages.collectAsState()
 
     val auth = Firebase.auth
+
+    val scope = rememberCoroutineScope()
+
+    val context = LocalContext.current
+    val googleSignInUiClient by lazy {
+        GoogleSignInUi(
+            contxt = context,
+            signInClint = Identity.getSignInClient(context),
+            signInViewModel.saveUserRepository
+        )
+    }
+    val data = googleSignInUiClient.getSignInUser()
+
 
 
     Column(modifier = Modifier.fillMaxSize() , verticalArrangement = Arrangement.Center , horizontalAlignment = Alignment.CenterHorizontally) {
@@ -50,7 +72,13 @@ fun ProfileScreen(googleSignInUi: GoogleSignInUi , onClick : () -> Unit) {
         }
 
 
-        Button(onClick = { onClick() }) {
+        Button(onClick = { scope.launch {
+             auth.signOut()
+             googleSignInUiClient.signOut()
+             onRoute(AuthScreen.SIGNUP.route)
+//            navController.navigate(AuthScreen.SIGNUP.route)
+        }
+        }) {
             Text(text = "LogQut")
         }
 
@@ -76,7 +104,7 @@ fun ProfileScreen(googleSignInUi: GoogleSignInUi , onClick : () -> Unit) {
                 Message(
                     message = "Test with Fake Star",
                     senderId = auth.uid.toString(),
-                    recipientId = "8UDX0ydCIsYohnnSqrwd5oM74232",
+                    recipientId = "Jaz5seHjL0Nct0IdSgixRW9wM8s2",
                     timeStamp = System.currentTimeMillis()
                 )
             )
@@ -91,4 +119,6 @@ fun ProfileScreen(googleSignInUi: GoogleSignInUi , onClick : () -> Unit) {
 
 
     }
+
+
 }

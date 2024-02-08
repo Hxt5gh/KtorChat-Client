@@ -118,14 +118,33 @@ dependencies {
 
 
     //navigation
-    val nav_version = "2.7.6"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+//    val nav_version = "2.7.6"
+ //   val nav_version = "2.3.4"
+ //   implementation("androidx.navigation:navigation-compose:$nav_version")
+  //  implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
 
     //hilt
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+ //   implementation("com.google.dagger:hilt-android:2.44")
+ //   kapt("com.google.dagger:hilt-android-compiler:2.44")
+  val  navigation_version = "2.5.3" // was 2.5.1
+   val  dagger_hilt_version = "2.44.2" // was 2.43.2
+
+    implementation ("androidx.navigation:navigation-fragment-ktx:$navigation_version")
+    implementation ("androidx.navigation:navigation-ui-ktx:$navigation_version")
+    implementation ("androidx.navigation:navigation-dynamic-features-fragment:$navigation_version")
+    androidTestImplementation ("androidx.navigation:navigation-testing:$navigation_version")
+       implementation("androidx.navigation:navigation-compose:$navigation_version")
+      implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    implementation ("com.google.dagger:hilt-android:$dagger_hilt_version")
+    kapt ("com.google.dagger:hilt-android-compiler:$dagger_hilt_version")
+    testImplementation ("com.google.dagger:hilt-android-testing:$dagger_hilt_version")
+    kaptTest ("com.google.dagger:hilt-android-compiler:$dagger_hilt_version")
+    androidTestImplementation ("com.google.dagger:hilt-android-testing:$dagger_hilt_version")
+    kaptAndroidTest ("com.google.dagger:hilt-android-compiler:$dagger_hilt_version")
+
+
 
     //image loading
     implementation("io.coil-kt:coil-compose:2.5.0")

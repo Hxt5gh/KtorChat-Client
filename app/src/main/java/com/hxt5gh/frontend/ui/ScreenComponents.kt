@@ -4,6 +4,7 @@ import android.view.RoundedCorner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,10 +31,21 @@ import androidx.compose.ui.unit.sp
 import com.hxt5gh.frontend.R
 
 @Composable
-fun ChatViewItem(image :  Int , name : String , lastMessage : String = "" , time : String = "" ) {
+fun ChatViewItem(image :  Int ,
+                 name : String ,
+                 lastMessage : String = "" ,
+                 time : String = "",
+                 onClick :() -> Unit
+) {
 
     Row(
-        modifier = Modifier.heightIn().background(MaterialTheme.colorScheme.background).padding(start = 8.dp , top = 8.dp , bottom = 8.dp),
+        modifier = Modifier
+            .heightIn()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(start = 8.dp , top = 8.dp , bottom = 8.dp)
+            .clickable {
+                       onClick()
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -73,5 +85,5 @@ fun ChatViewItem(image :  Int , name : String , lastMessage : String = "" , time
 @Preview(showBackground = true , showSystemUi = true)
 @Composable
 fun ChatViewItemPrev() {
-    ChatViewItem(R.drawable.cap , name = "" , lastMessage = "" , time = "")
+    ChatViewItem(R.drawable.cap , name = "" , lastMessage = "" , time = "" , onClick = {})
 }

@@ -2,8 +2,10 @@ package com.hxt5gh.frontend
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.ViewModelStore
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.hxt5gh.frontend.presentation.signin.SignInViewModel
 import com.onesignal.OneSignal
 import com.onesignal.OneSignal.User
 import dagger.hilt.android.HiltAndroidApp
@@ -14,6 +16,8 @@ import kotlinx.coroutines.launch
 
 @HiltAndroidApp
 class AppApplication : Application() {
+
+
     override fun onCreate() {
         super.onCreate()
 
@@ -29,10 +33,6 @@ class AppApplication : Application() {
             Log.d("TAG", "onesignalId : ${id1} ")
             Log.d("TAG", "externalId  : ${id2}")
         }
-
-
-
-
 
     }
 
