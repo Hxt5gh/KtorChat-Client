@@ -16,20 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.hxt5gh.frontend.data.remote.message.Message
-import com.hxt5gh.frontend.presentation.message.GetMessagesViewModel
+import com.hxt5gh.frontend.presentation.chat.GetMessagesViewModel
+import com.hxt5gh.frontend.presentation.chat.SearchScreenViewModel
+import com.hxt5gh.frontend.presentation.chat.SocketViewModel
 import com.hxt5gh.frontend.presentation.signin.GoogleSignInUi
 import com.hxt5gh.frontend.presentation.signin.SignInViewModel
-import com.hxt5gh.frontend.presentation.signin.UserData
 import com.hxt5gh.frontend.ui.routes.AuthScreen
-import com.hxt5gh.frontend.ui.routes.Graph
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,10 +37,14 @@ fun ProfileScreen(navController: NavHostController  , onRoute : (String) -> Unit
 
     val viewModel : GetMessagesViewModel = hiltViewModel()
     val signInViewModel : SignInViewModel = hiltViewModel()
+    val socketViewModel : SocketViewModel = hiltViewModel()
 
-    val message = signInViewModel.messages.collectAsState()
+    val searchScreenViewModel : SearchScreenViewModel = hiltViewModel()
+
+    val message = socketViewModel.messages.collectAsState()
 
     val auth = Firebase.auth
+   // socketViewModel.init(auth.uid.toString())
 
     val scope = rememberCoroutineScope()
 
@@ -76,7 +78,6 @@ fun ProfileScreen(navController: NavHostController  , onRoute : (String) -> Unit
              auth.signOut()
              googleSignInUiClient.signOut()
              onRoute(AuthScreen.SIGNUP.route)
-//            navController.navigate(AuthScreen.SIGNUP.route)
         }
         }) {
             Text(text = "LogQut")
@@ -84,23 +85,36 @@ fun ProfileScreen(navController: NavHostController  , onRoute : (String) -> Unit
 
         Spacer(modifier = Modifier.size(20.dp))
 
+
         Button(onClick = {
-            Log.d("TAG", "HomeScreen: message ${viewModel.getMessage("12")}")
+            Log.d("debug", "HomeScreen: message ${viewModel.getMessage("12")}")
+            /*
+            Log.d("debug", "ProfileScreen: get searched user  ${searchScreenViewModel.getSearchedUser("h")}")
+            searchScreenViewModel.userList.forEach {
+                Log.d("debug", "ProfileScreen: ${it.userId} ${it.userName}")
+            }
+
+             */
         }) {
             Text(text = "getMessage")
         }
         Spacer(modifier = Modifier.size(20.dp))
 
+
+        /*
+
         Button(onClick = {
-                signInViewModel.init(auth.uid.toString())
+                socketViewModel.init(auth.uid.toString())
         }) {
             Text(text = "connect")
         }
 
+
+
         Spacer(modifier = Modifier.size(20.dp))
 
         Button(onClick = {
-            signInViewModel.sendMessage(
+            socketViewModel.sendMessage(
                 Message(
                     message = "Test with Fake Star",
                     senderId = auth.uid.toString(),
@@ -113,8 +127,14 @@ fun ProfileScreen(navController: NavHostController  , onRoute : (String) -> Unit
         }
         Spacer(modifier = Modifier.size(10.dp))
 
+         */
+
 
         Text(text = "New Message -> ${message.value.message}" )
+
+
+
+
 
 
 

@@ -82,7 +82,7 @@ fun splashScreen(navController: NavHostController) {
     )
 
     LaunchedEffect(key1 = Unit){
-        delay(1900)//1900
+        delay(0)//1900
         if(viewModel.isAuthenticated(context)){
             //home
             navController.navigate(Graph.MAIN_SCREEN_PAGE){

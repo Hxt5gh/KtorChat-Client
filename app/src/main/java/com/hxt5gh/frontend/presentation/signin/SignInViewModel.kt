@@ -41,11 +41,6 @@ class SignInViewModel @Inject constructor(private val chatSocketService: ChatSoc
 
     var loadingStatus = mutableStateOf(LoadingStatus())
 
-    private val _messages = MutableStateFlow<MessageReceive>(MessageReceive("","","","",0))
-    val messages: StateFlow<MessageReceive> = _messages
-
-
-
     fun signInResult(result : SignInResult , navController: NavHostController)
     {
         Log.d("debug", "signInResult: is result not equal null  ${result.data != null} ")
@@ -77,54 +72,6 @@ class SignInViewModel @Inject constructor(private val chatSocketService: ChatSoc
         }
         return googleSignInUiClient.getSignInUser() != null
     }
-
-
-//    init
-//    {
-//        Log.d("socket", "first: ")
-//        // Launch a coroutine to collect messages from the chat socket service
-//        viewModelScope.launch {
-//            chatSocketService.messageObservable().collect { message ->
-//                // Emit each incoming message to the shared flow
-//                _messages.value = message
-//
-//            }
-//        }
-//    }
-
-    fun init(chatId : String)
-    {
-        viewModelScope.launch {
-          val result =   chatSocketService.initSession(chatId)
-
-            when(result){
-               is Resource.Success ->{
-                   chatSocketService.messageObservable().collect{message ->
-                       _messages.value = _messages.value.copy(
-                           id = message.id,
-                           senderId = message.senderId,
-                           recipientId = message.recipientId,
-                           message = message.message,
-                           timeStamp = message.timeStamp
-                       )
-
-                   }
-                }
-                is Resource.Error ->{
-                    Log.d("TAG", "init: ERROR IN CONNECTIONG TO SOCKET")
-                }
-            }
-        }
-    }
-
-    fun sendMessage(message: Message)
-    {
-        viewModelScope.launch {
-            chatSocketService.sendMessages(message)
-        }
-    }
-
-
 
 
     fun resetState()

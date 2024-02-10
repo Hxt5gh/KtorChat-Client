@@ -16,18 +16,24 @@ import com.hxt5gh.frontend.presentation.signin.SignInViewModel
 import com.hxt5gh.frontend.ui.screen.ChatScreen
 import com.hxt5gh.frontend.ui.screen.ProfileScreen
 import com.hxt5gh.frontend.ui.screen.SearchScreen
+import com.hxt5gh.frontend.ui.screen.User
 
 @Composable
-fun MainNavGraph(navController: NavHostController , onRoute : (String) -> Unit) {
+fun MainNavGraph(navController: NavHostController , onRoute : (String) -> Unit , onClick : (User) -> Unit) {
 
     NavHost(
         navController = navController,
         startDestination = Routes.Chat_Screen
     ){
-        Log.d("debug", "MainNavGraph: level 8")
+
 
         composable(route = Routes.Chat_Screen){
-            ChatScreen(navController)
+            ChatScreen(
+                navController ,
+                onClick = {
+                    onClick(it)
+                }
+            )
         }
         composable(route = Routes.Search_Screen){
             SearchScreen(navController)

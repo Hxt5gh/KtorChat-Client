@@ -2,6 +2,7 @@ package com.hxt5gh.frontend.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,6 +24,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,15 +35,21 @@ import androidx.compose.ui.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.hxt5gh.frontend.presentation.chat.GetMessagesViewModel
+import com.hxt5gh.frontend.presentation.chat.SocketViewModel
+import com.hxt5gh.frontend.presentation.signin.SignInViewModel
 import com.hxt5gh.frontend.ui.ChatViewItem
 import com.hxt5gh.frontend.ui.routes.AuthScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(navController: NavHostController) {
+fun ChatScreen(navController: NavHostController , onClick :(User) -> Unit) {
 
     Scaffold(
         topBar = {
@@ -181,12 +190,13 @@ fun ChatScreen(navController: NavHostController) {
                     timestamp = System.currentTimeMillis() - 780000 // 13 minutes ago
                 )
             )
-
-            LazyColumn(){
-                itemsIndexed(dummyUsers){index, item ->
-                    ChatViewItem(image = item.profileImage, name = item.name , lastMessage = item.lastMessage ){
-                        //onClick
-
+            Column {
+                LazyColumn(){
+                    itemsIndexed(dummyUsers){index, item ->
+                        ChatViewItem(image = item.profileImage, name = item.name , lastMessage = item.lastMessage ){
+                            //onClick
+                            onClick(item)
+                        }
                     }
                 }
             }
@@ -201,7 +211,7 @@ fun ChatScreen(navController: NavHostController) {
 @Preview(showBackground = true )
 @Composable
 fun ChatPrev() {
-    ChatScreen(navController = rememberNavController())
+    ChatScreen(navController = rememberNavController() , onClick = {})
 }
 
 data class User(

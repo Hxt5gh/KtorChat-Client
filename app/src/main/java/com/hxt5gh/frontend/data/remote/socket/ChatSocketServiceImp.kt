@@ -63,9 +63,11 @@ class ChatSocketServiceImp(private val httpClient: HttpClient) : ChatSocketServi
                 Resource.Success(Unit)
             }else
             {
+                Log.d("TAG", "socket Not Connected")
                 Resource.Error("Couldn't estabish Connection connection")
             }
         }catch (e : Exception){
+            Log.d("TAG", "socket Not Connected")
             e.printStackTrace()
             Resource.Error(e.localizedMessage ?: "Unknown Error")
         }
@@ -104,5 +106,9 @@ class ChatSocketServiceImp(private val httpClient: HttpClient) : ChatSocketServi
 
     override suspend fun closeSession() {
        socket?.close()
+    }
+
+    override suspend fun isSocketActive(): Boolean {
+        return socket?.isActive == true
     }
 }

@@ -13,14 +13,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -29,36 +26,23 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.hxt5gh.frontend.R
-import com.hxt5gh.frontend.presentation.message.GetMessagesViewModel
-import com.hxt5gh.frontend.presentation.signin.GoogleSignInUi
-import com.hxt5gh.frontend.presentation.signin.SignInViewModel
+import com.hxt5gh.frontend.presentation.chat.SocketViewModel
+import com.hxt5gh.frontend.ui.screen.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(onRoute : (String) -> Unit) {
-    /*
-    val signInViewModel : SignInViewModel = hiltViewModel()
+fun MainScreen(onRoute : (String) -> Unit, onClick : (User) -> Unit) {
+
+    val socketViewModel : SocketViewModel = hiltViewModel()
     val auth = Firebase.auth
 
-    val context = LocalContext.current
-    val googleSignInUiClient by lazy {
-        GoogleSignInUi(
-            contxt = context,
-            signInClint = Identity.getSignInClient(context),
-            signInViewModel.saveUserRepository
-        )
+    LaunchedEffect(Unit){
+        socketViewModel.init(auth.uid.toString())
     }
-    val data = googleSignInUiClient.getSignInUser()
 
-     LaunchedEffect(Unit){
-         signInViewModel.init(auth.uid.toString())
-     }
-
-     */
 
     val navController = rememberNavController()
     val navList = listOf(
@@ -93,12 +77,11 @@ fun MainScreen(onRoute : (String) -> Unit) {
 
     Scaffold(
       //  bottomBar = { BottomBar(navController) }
-//        /*
+
         bottomBar = { NavigationBar {
                 navList.forEachIndexed { index, bottomNavigationIcon ->
                     NavigationBarItem(
                         label = { Text(text = bottomNavigationIcon.title.toString()) },
-//                        selected =  selectItemState == index,
                         selected =  currentDestination?.hierarchy?.any {
                                                                        it.route == bottomNavigationIcon.route
                         } == true,
@@ -143,13 +126,18 @@ fun MainScreen(onRoute : (String) -> Unit) {
                 }
             }
         }
-
-//         */
     ) {
         Surface(modifier = Modifier.padding(it)) {
-            MainNavGraph(navController = navController){
-                onRoute(it)
-            }
+            MainNavGraph(
+                navController = navController ,
+                onRoute =
+                {
+                    onRoute(it)
+                },
+                onClick =
+                {
+                    onClick(it)
+                })
         }
 
     }
@@ -157,7 +145,6 @@ fun MainScreen(onRoute : (String) -> Unit) {
 
 @Composable
 fun BottomBar(navController: NavController) {
-    Log.d("debug", "MainScreen: level 2")
 
     val navList = listOf(
         BottomNavigationIcon(

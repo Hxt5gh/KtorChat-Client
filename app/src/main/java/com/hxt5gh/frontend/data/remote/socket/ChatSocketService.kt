@@ -16,4 +16,7 @@ interface ChatSocketService {
 
     //when we close the app we will close the session
     suspend fun closeSession()
+
+
+    suspend fun isSocketActive() : Boolean
 }

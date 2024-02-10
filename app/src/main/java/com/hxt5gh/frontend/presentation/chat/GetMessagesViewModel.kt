@@ -1,4 +1,4 @@
-package com.hxt5gh.frontend.presentation.message
+package com.hxt5gh.frontend.presentation.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +18,6 @@ class GetMessagesViewModel @Inject constructor(
     private val api : MessageApi ,
     private val saveUserRepositoryImp: SaveUserRepositoryImp
 ) : ViewModel() {
-
 
 
     fun getMessage(chatId: String): List<Message> {

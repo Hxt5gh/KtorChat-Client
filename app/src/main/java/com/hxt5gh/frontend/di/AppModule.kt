@@ -8,6 +8,7 @@ import com.hxt5gh.frontend.data.remote.message.MessageServicesImp
 import com.hxt5gh.frontend.data.remote.socket.ChatSocketServiceImp
 import com.hxt5gh.frontend.data.remote.userDetail.UserDetailService
 import com.hxt5gh.frontend.data.remote.userDetail.UserDetailServiceImp
+import com.hxt5gh.frontend.data.remote.userDetail.UserNameSearchServiceImp
 import com.hxt5gh.frontend.domain.message.GetMessageRepository
 import com.hxt5gh.frontend.domain.message.GetMessageRepositoryImp
 import com.hxt5gh.frontend.domain.userDetailRepo.SaveUserRepository
@@ -95,12 +96,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetMessageRepository(messageServices: MessageServicesImp) : GetMessageRepository{
-        return GetMessageRepositoryImp(messageServices)
-    }
-
-    @Provides
-    @Singleton
     fun provideSaveMessage(httpClient: HttpClient) : UserDetailServiceImp{
         return UserDetailServiceImp(httpClient)
     }
@@ -115,6 +110,17 @@ object AppModule {
     @Singleton
     fun provideChatSocketServiceImp(httpClient: HttpClient): ChatSocketServiceImp{
         return ChatSocketServiceImp(httpClient)
+    }
+    @Provides
+    @Singleton
+    fun provideUserNameSearchServiceImp(httpClient: HttpClient) : UserNameSearchServiceImp {
+        return UserNameSearchServiceImp(httpClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetMessageRepository(messageServices: MessageServicesImp , userNameSearchServiceImp: UserNameSearchServiceImp) : GetMessageRepository{
+        return GetMessageRepositoryImp(messageServices, userNameSearchServiceImp)
     }
 
 
