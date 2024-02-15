@@ -18,6 +18,8 @@ import com.hxt5gh.frontend.ui.screen.DetailScreen
 import com.hxt5gh.frontend.ui.screen.SignInScreen
 import com.hxt5gh.frontend.ui.screen.splashScreen
 import com.hxt5gh.frontend.R
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun RootNavigationGraph(navController: NavHostController) {
@@ -56,21 +58,30 @@ fun RootNavigationGraph(navController: NavHostController) {
                      val userId = it.id
                      val name = it.name
                      val resource = it.profileImage
-                     //toDetail
-                     navController.navigate("${Graph.DETAILS}/${"userId"}/${name}/${resource.toInt()}")
+                     val encodedUrl = URLEncoder.encode(resource, StandardCharsets.UTF_8.toString())
+                     Log.d("debug", "RootNavigationGraph:  4 -> ${it.id} ${it.name} ${it.profileImage}")
+                     if (resource.isBlank()){
+                         //toDetail
+                         navController.navigate("${Graph.DETAILS}/${userId}/${name}/${"empty"}")
+                     }else
+                     {
+                         //toDetail
+                         navController.navigate("${Graph.DETAILS}/${userId}/${name}/${encodedUrl}")
+                     }
                  })
         }
         composable(route = "${Graph.DETAILS}/{${"id"}}/{${"name"}}/{${"res"}}" ,
             arguments = listOf(
             navArgument(name = "id"){type = NavType.StringType},
             navArgument(name = "name"){type = NavType.StringType},
-            navArgument(name = "res"){type = NavType.IntType}
+            navArgument(name = "res"){type = NavType.StringType},
         )){
             val id = it.arguments?.getString("id").toString()
             val name = it.arguments?.getString("name").toString()
-            val res = it.arguments?.getInt("res")
+            val res = it.arguments?.getString("res").toString()
+            Log.d("debug", "RootNavigationGraph:  5 -> ${id} ${name} ${res}")
 
-            DetailScreen(id , name , res!! ){
+            DetailScreen(id , name , res ){
                 navController.navigate(Graph.MAIN_SCREEN_PAGE){
                     popUpTo(Graph.MAIN_SCREEN_PAGE){
                         inclusive = true
@@ -82,12 +93,6 @@ fun RootNavigationGraph(navController: NavHostController) {
     }
 
 }
-
-
-//"${Routes.UPDATE_SCREEN_ROUTE}/{${"id"}}"
-
-//"${Routes.UPDATE_SCREEN_ROUTE}/${events.item.id}"
-
 
 
 object Graph{

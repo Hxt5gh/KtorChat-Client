@@ -56,13 +56,15 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.hxt5gh.frontend.presentation.chat.SearchScreenViewModel
+import com.hxt5gh.frontend.ui.SearchUserView
 import com.hxt5gh.frontend.ui.TextChatInput
 import com.hxt5gh.frontend.ui.UserSearchInput
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(navController: NavHostController) {
+fun SearchScreen(navController: NavHostController , onClick : (User) -> Unit) {
     var textState by remember { mutableStateOf("") }
     var enable by remember { mutableStateOf(false) }
     var items = remember { mutableStateListOf("harry" ,"james" ,"potter" , "lily" ) }
@@ -130,9 +132,25 @@ fun SearchScreen(navController: NavHostController) {
             }
         ){
             searchScreenViewModel.userList.forEach{
-                Row(modifier = Modifier.padding(all = 14.dp)) {
-                    Text(modifier = Modifier.padding(start = 14.dp) ,text = it.userName, fontSize = 18.sp, fontWeight = FontWeight.Medium)
-                }
+
+                Log.d("debug", "SearchScreen1: -> uri image ${it.profileUri} ")
+                    SearchUserView(image = it.profileUri,userId = it.userId , userName = it.userName , displayName =  it.displayName){
+                        val userId = it.id
+                        val displayName = it.name
+                        val pic = it.profileImage
+
+                        Log.d("debug", "SearchScreen2: ${userId} ${displayName}  ${pic}")
+                        onClick(
+                           User(
+                               id = userId,
+                               name = displayName,
+                               profileImage = pic,
+                               lastMessage = "",
+                               timestamp = 0
+                           )
+                       )
+                    }
+
             }
         }
         Surface(
@@ -149,5 +167,11 @@ fun SearchScreen(navController: NavHostController) {
 @Preview(showBackground =  true , showSystemUi = true)
 @Composable
 fun SearchScreenPrev() {
-    SearchScreen(navController = rememberNavController())
+    SearchScreen(navController = rememberNavController(), onClick = {})
 }
+
+data class UserInfo(
+    val userid: String,
+    val displayName: String,
+    val profileImage: String?,
+)

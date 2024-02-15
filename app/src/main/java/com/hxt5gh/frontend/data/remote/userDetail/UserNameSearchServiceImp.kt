@@ -44,7 +44,7 @@ class UserNameSearchServiceImp @Inject constructor(private val httpClient: HttpC
             // 'data' will contain the list received from the server
 
             data.forEach {
-                Log.d("debug", "userNameSearchService: ${it.userId} ${it.userName} ")
+                Log.d("debug", "userNameSearchService: ${it.userId} ${it.userName} ${it.displayName} ${it.profileUri} ")
             }
 
 
@@ -64,4 +64,6 @@ class UserNameSearchServiceImp @Inject constructor(private val httpClient: HttpC
 data class Response(
     val userId : String = "",
     val userName : String = "",
+    val displayName : String = "",
+    val profileUri : String = "",
 )

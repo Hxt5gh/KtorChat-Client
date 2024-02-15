@@ -7,14 +7,10 @@ import kotlinx.serialization.Serializable
 data class UserDataDto(
     val userId : String ,
     val userName : String,
-    val userChats : List<ChatInfo> = emptyList()
+    val displayName : String,
+    val profileUri : String? = null,
 )
-@Serializable
-data class ChatInfo(
-    val chatId : String,
-    val sender : String,
-    val receiver : String
-)
+
 /*
 {
     "userId": "harpreetSingh",

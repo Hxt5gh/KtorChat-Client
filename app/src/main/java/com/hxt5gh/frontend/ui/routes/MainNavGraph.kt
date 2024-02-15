@@ -36,7 +36,18 @@ fun MainNavGraph(navController: NavHostController , onRoute : (String) -> Unit ,
             )
         }
         composable(route = Routes.Search_Screen){
-            SearchScreen(navController)
+            SearchScreen(navController , onClick ={
+                Log.d("debug", "MainNavGraph: 3 -> ${it.id} ${it.name} ${it.profileImage}")
+                onClick(
+                    User(
+                        id = it.id,
+                        name = it.name,
+                        profileImage = it.profileImage,
+                        lastMessage = "",
+                        timestamp = 0
+                    )
+                )
+            })
         }
         composable(route = Routes.Profile_Screen){
             ProfileScreen(navController){

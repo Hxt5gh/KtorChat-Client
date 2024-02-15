@@ -52,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.hxt5gh.frontend.R
@@ -70,9 +71,11 @@ import kotlin.math.log
 fun DetailScreen(
     userId : String ,
     userName : String ,
-    resource : Int = R.drawable.a1,
+    resource : String,
     onClick: () ->Unit
 ) {
+
+    Log.d("debug", "DetailScreen: 6 -> ${resource}")
 
     var textState by remember { mutableStateOf("")}
     val auth = Firebase.auth
@@ -95,14 +98,28 @@ fun DetailScreen(
             TopAppBar(
                 title = {
                     Row {
-                        Image(
-                            painter = painterResource(id = resource),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .size(42.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
+                        if (resource.equals("empty"))
+                        {
+                            Image(
+                                painter = painterResource(id = R.drawable.blankpic),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(42.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        }else
+                        {
+                            AsyncImage(
+                                model = resource,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(42.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+
                         Text(
                             modifier = Modifier.padding(start = 8.dp),
                             text = userName,
@@ -177,39 +194,7 @@ fun DetailScreen(
                         item {
                              Text(text = "New Message -> ${message}" , fontSize = 32.sp )
                         }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
-                        item {
-                             Text(text = "New Message -> ${message}" , fontSize = 32.sp )
-                        }
+
                     }
                 }
                 Box(
@@ -259,7 +244,7 @@ fun DetailScreen(
                                         Message(
                                             message = msg,
                                             senderId = auth.uid.toString(),
-                                            recipientId = "Jaz5seHjL0Nct0IdSgixRW9wM8s2",
+                                            recipientId = "Ninja",
                                             timeStamp = System.currentTimeMillis()
                                         )
                                     )
@@ -292,5 +277,5 @@ fun DetailScreen(
 @Preview(showBackground = true)
 @Composable
 fun DetailScreenPrev() {
-    DetailScreen(userId = "" , userName = "Harry", resource = R.drawable.cap, onClick = {} )
+    DetailScreen(userId = "" , userName = "Harry", resource = "", onClick = {} )
 }

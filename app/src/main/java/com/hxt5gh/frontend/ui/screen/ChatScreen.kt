@@ -99,98 +99,13 @@ fun ChatScreen(navController: NavHostController , onClick :(User) -> Unit) {
         ) {
             val dummyUsers = listOf(
                 User(
-                    id = "",
+                    id = "useridagain",
                     name = "John Doe",
-                    profileImage = com.hxt5gh.frontend.R.drawable.th4,
+                    profileImage = "",
                     lastMessage = "Hey, how's it going?",
                     timestamp = System.currentTimeMillis() - 60000 // 1 minute ago
-                ),
-                User(
-                    id = "",
-                    name = "Jane Smith",
-                    profileImage =  com.hxt5gh.frontend.R.drawable.th5,
-                    lastMessage = "What are you up to?",
-                    timestamp = System.currentTimeMillis() - 120000 // 2 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "Mike Johnson",
-                    profileImage =  com.hxt5gh.frontend.R.drawable.th7,
-                    lastMessage = "Let's catch up soon!",
-                    timestamp = System.currentTimeMillis() - 180000 // 3 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "Emily Brown",
-                    profileImage = com.hxt5gh.frontend.R.drawable.th,
-                    lastMessage = "How was your day?",
-                    timestamp = System.currentTimeMillis() - 240000 // 4 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "Chris Wilson",
-                    profileImage =  com.hxt5gh.frontend.R.drawable.th2,
-                    lastMessage = "Do you have any plans this weekend?",
-                    timestamp = System.currentTimeMillis() - 300000 // 5 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "Sarah Davis",
-                    profileImage = com.hxt5gh.frontend.R.drawable.th7,
-                    lastMessage = "I'm excited about the project!",
-                    timestamp = System.currentTimeMillis() - 360000 // 6 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "Michael Taylor",
-                    profileImage = com.hxt5gh.frontend.R.drawable.th5,
-                    lastMessage = "Let's grab lunch tomorrow.",
-                    timestamp = System.currentTimeMillis() - 420000 // 7 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "Emma Martinez",
-                    profileImage = com.hxt5gh.frontend.R.drawable.th6,
-                    lastMessage = "Can you send me the file?",
-                    timestamp = System.currentTimeMillis() - 480000 // 8 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "Daniel Anderson",
-                    profileImage =  com.hxt5gh.frontend.R.drawable.th8,
-                    lastMessage = "I'll be late for the meeting.",
-                    timestamp = System.currentTimeMillis() - 540000 // 9 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "Olivia Garcia",
-                    profileImage = com.hxt5gh.frontend.R.drawable.th6,
-                    lastMessage = "Thanks for your help!",
-                    timestamp = System.currentTimeMillis() - 600000 // 10 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "James Rodriguez",
-                    profileImage = com.hxt5gh.frontend.R.drawable.th1,
-                    lastMessage = "Let's meet up this evening.",
-                    timestamp = System.currentTimeMillis() - 660000 // 11 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "Sophia Hernandez",
-                    profileImage = com.hxt5gh.frontend.R.drawable.th5,
-                    lastMessage = "Have you seen the latest episode?",
-                    timestamp = System.currentTimeMillis() - 720000 // 12 minutes ago
-                ),
-                User(
-                    id = "",
-                    name = "William Lopez",
-                    profileImage = com.hxt5gh.frontend.R.drawable.th4,
-                    lastMessage = "I'll be out of town next week.",
-                    timestamp = System.currentTimeMillis() - 780000 // 13 minutes ago
-                )
-            )
-            Column {
+                ))
+            Column() {
                 LazyColumn(){
                     itemsIndexed(dummyUsers){index, item ->
                         ChatViewItem(image = item.profileImage, name = item.name , lastMessage = item.lastMessage ){
@@ -217,7 +132,7 @@ fun ChatPrev() {
 data class User(
     val id: String,
     val name: String,
-    val profileImage: Int,
+    val profileImage: String,
     val lastMessage: String,
     val timestamp: Long
 )

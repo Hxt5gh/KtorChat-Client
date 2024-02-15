@@ -1,6 +1,10 @@
 package com.hxt5gh.frontend.ui.screen
 
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,9 +14,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,6 +32,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.hxt5gh.frontend.data.remote.message.Message
 import com.hxt5gh.frontend.presentation.chat.GetMessagesViewModel
+import com.hxt5gh.frontend.presentation.chat.ProfileScreenViewModel
 import com.hxt5gh.frontend.presentation.chat.SearchScreenViewModel
 import com.hxt5gh.frontend.presentation.chat.SocketViewModel
 import com.hxt5gh.frontend.presentation.signin.GoogleSignInUi
@@ -38,6 +48,7 @@ fun ProfileScreen(navController: NavHostController  , onRoute : (String) -> Unit
     val viewModel : GetMessagesViewModel = hiltViewModel()
     val signInViewModel : SignInViewModel = hiltViewModel()
     val socketViewModel : SocketViewModel = hiltViewModel()
+    val profileScreenViewModel : ProfileScreenViewModel = hiltViewModel()
 
     val searchScreenViewModel : SearchScreenViewModel = hiltViewModel()
 
@@ -57,6 +68,20 @@ fun ProfileScreen(navController: NavHostController  , onRoute : (String) -> Unit
         )
     }
     val data = googleSignInUiClient.getSignInUser()
+
+
+    var selectedImage by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult ={uri ->
+            selectedImage = uri
+            profileScreenViewModel.uploadImage(uri!!)
+
+        }
+    )
 
 
 
@@ -134,8 +159,18 @@ fun ProfileScreen(navController: NavHostController  , onRoute : (String) -> Unit
 
 
 
+        Log.d("debug", "ProfileScreen  image e ${selectedImage} ")
+        AsyncImage(model = selectedImage , contentDescription ="" , modifier = Modifier.size(50.dp) )
+        Button(onClick = {
+            launcher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+            //saaving image  to firebase
 
 
+        }) {
+            Text(text = "Image")
+        }
 
 
     }

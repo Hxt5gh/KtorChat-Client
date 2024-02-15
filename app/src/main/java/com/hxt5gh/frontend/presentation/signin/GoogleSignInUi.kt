@@ -70,7 +70,9 @@ class GoogleSignInUi(
                 saveUserRepository.saveUserDetail(
                     UserDataDto(
                         userId = user.uid,
-                        userName = credential.displayName
+                        userName = credential.displayName,
+                        displayName = credential.displayName,
+                        profileUri = credential.profilePictureUri.toString()
                     )
                 )
             }

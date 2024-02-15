@@ -11,10 +11,13 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class DetailScreenViewModel @Inject constructor() : ViewModel() {
+class ProfileScreenViewModel @Inject constructor(private val saveUserRepositoryImp: SaveUserRepositoryImp): ViewModel() {
 
-}
-
-sealed class DetailUIEvent{
-    object SendMessage : DetailUIEvent()
+    var imageUri : String? = null
+    fun uploadImage(uri  : Uri)
+    {
+        viewModelScope.launch {
+          imageUri = saveUserRepositoryImp.saveImageToFirebase(uri)
+        }
+    }
 }
