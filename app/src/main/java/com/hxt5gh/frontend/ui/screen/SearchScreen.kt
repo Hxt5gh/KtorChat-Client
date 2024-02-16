@@ -133,13 +133,11 @@ fun SearchScreen(navController: NavHostController , onClick : (User) -> Unit) {
         ){
             searchScreenViewModel.userList.forEach{
 
-                Log.d("debug", "SearchScreen1: -> uri image ${it.profileUri} ")
                     SearchUserView(image = it.profileUri,userId = it.userId , userName = it.userName , displayName =  it.displayName){
                         val userId = it.id
                         val displayName = it.name
                         val pic = it.profileImage
 
-                        Log.d("debug", "SearchScreen2: ${userId} ${displayName}  ${pic}")
                         onClick(
                            User(
                                id = userId,

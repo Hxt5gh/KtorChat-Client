@@ -59,7 +59,7 @@ fun RootNavigationGraph(navController: NavHostController) {
                      val name = it.name
                      val resource = it.profileImage
                      val encodedUrl = URLEncoder.encode(resource, StandardCharsets.UTF_8.toString())
-                     Log.d("debug", "RootNavigationGraph:  4 -> ${it.id} ${it.name} ${it.profileImage}")
+
                      if (resource.isBlank()){
                          //toDetail
                          navController.navigate("${Graph.DETAILS}/${userId}/${name}/${"empty"}")
@@ -79,7 +79,7 @@ fun RootNavigationGraph(navController: NavHostController) {
             val id = it.arguments?.getString("id").toString()
             val name = it.arguments?.getString("name").toString()
             val res = it.arguments?.getString("res").toString()
-            Log.d("debug", "RootNavigationGraph:  5 -> ${id} ${name} ${res}")
+
 
             DetailScreen(id , name , res ){
                 navController.navigate(Graph.MAIN_SCREEN_PAGE){

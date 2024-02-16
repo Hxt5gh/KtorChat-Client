@@ -159,7 +159,7 @@ fun TextChatInput(modifier: Modifier = Modifier, value: String, onTextChange: (S
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Done,
         ),
         keyboardActions = KeyboardActions { localFocusManager.clearFocus() }
     )

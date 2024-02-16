@@ -1,6 +1,7 @@
 package com.hxt5gh.frontend.domain.userDetailRepo
 
 import android.net.Uri
+import com.hxt5gh.frontend.data.remote.userDetail.ChatInfo
 import com.hxt5gh.frontend.data.remote.userDetail.UserDataDto
 import com.hxt5gh.frontend.data.remote.userDetail.UserDetailService
 import com.hxt5gh.frontend.data.remote.userDetail.UserDetailServiceImp
@@ -14,4 +15,5 @@ class SaveUserRepositoryImp @Inject constructor(private val userDetailService: U
     override suspend fun saveImageToFirebase(uri: Uri) : String? {
        return userDetailService.saveImageToFirebase(uri)
     }
+
 }

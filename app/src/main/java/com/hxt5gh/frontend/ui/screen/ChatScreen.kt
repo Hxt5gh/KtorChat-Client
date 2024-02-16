@@ -1,5 +1,6 @@
 package com.hxt5gh.frontend.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.hxt5gh.frontend.data.remote.userDetail.ChatDetail
+import com.hxt5gh.frontend.data.remote.userDetail.ChatInfo
+import com.hxt5gh.frontend.presentation.chat.ChatScreenViewModel
 import com.hxt5gh.frontend.presentation.chat.GetMessagesViewModel
 import com.hxt5gh.frontend.presentation.chat.SocketViewModel
 import com.hxt5gh.frontend.presentation.signin.SignInViewModel
@@ -50,6 +54,15 @@ import com.hxt5gh.frontend.ui.routes.AuthScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(navController: NavHostController , onClick :(User) -> Unit) {
+
+    val chatScreenViewModel : ChatScreenViewModel = hiltViewModel()
+    val getMessagesViewModel : GetMessagesViewModel = hiltViewModel()
+
+
+    LaunchedEffect(Unit){
+        Log.d("debug", "ChatScreen: ${chatScreenViewModel.chatInfo}")
+    }
+
 
     Scaffold(
         topBar = {
@@ -107,10 +120,18 @@ fun ChatScreen(navController: NavHostController , onClick :(User) -> Unit) {
                 ))
             Column() {
                 LazyColumn(){
-                    itemsIndexed(dummyUsers){index, item ->
-                        ChatViewItem(image = item.profileImage, name = item.name , lastMessage = item.lastMessage ){
+                    itemsIndexed(chatScreenViewModel.chatInfo.chatList){index, item ->
+                        Log.d("debug", "ChatScreen: Checking -> ${item}>")
+                       // val lastMessage = getMessagesViewModel.getMessage("${Firebase.auth.uid}${item.receiver}")
+                        ChatViewItem(image = item.receiverPic.toString(), name = item.receiverName.toString() , lastMessage = item.lastMessage.toString() ){
                             //onClick
-                            onClick(item)
+                            onClick(User(
+                                id = item.receiver,
+                                name = item.receiverName.toString(),
+                                profileImage = item.receiverPic.toString(),
+                                lastMessage = "",
+                                timestamp = 0
+                            ))
                         }
                     }
                 }

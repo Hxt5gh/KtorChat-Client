@@ -58,6 +58,35 @@ class UserNameSearchServiceImp @Inject constructor(private val httpClient: HttpC
             flow<List<Response>> {emit(emptyList())}
         }
     }
+
+    override suspend fun userUChatWith(chatId: String): ChatInfo {
+
+
+        return try {
+            val url = URLBuilder().apply {
+                takeFrom("http://${BuildConfig.KTOR_IP_ADDRESS_Two}")
+                path("get-chat-with")
+            }.build()
+
+            val response: HttpResponse = httpClient.request(url) {
+                method = HttpMethod.Get
+                parameter("userid" , chatId )
+            }
+            val data: ChatInfo = response.receive()
+            Log.d("debug", "userNameSearchService: id ${chatId} UserChatWith is ${data} ")
+            data
+        }catch (e : Exception){
+            Log.d("debug", "saveUserDetail: ${e.message}")
+            e.printStackTrace()
+             val data = ChatInfo(
+                 userId = "",
+                 chatList = emptyList()
+             )
+            data
+        }
+
+    }
+
 }
 
 @Serializable

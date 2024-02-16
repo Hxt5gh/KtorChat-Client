@@ -4,4 +4,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserNameSearchService {
     suspend fun userNameSearchService(query : String ) : Flow<List<Response>>
+
+    suspend fun userUChatWith(chatId : String) : ChatInfo
 }

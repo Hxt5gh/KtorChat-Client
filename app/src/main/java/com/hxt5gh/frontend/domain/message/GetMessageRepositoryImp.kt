@@ -2,6 +2,7 @@ package com.hxt5gh.frontend.domain.message
 
 import com.hxt5gh.frontend.data.remote.message.Message
 import com.hxt5gh.frontend.data.remote.message.MessageServicesImp
+import com.hxt5gh.frontend.data.remote.userDetail.ChatInfo
 import com.hxt5gh.frontend.data.remote.userDetail.Response
 import com.hxt5gh.frontend.data.remote.userDetail.UserNameSearchServiceImp
 import kotlinx.coroutines.flow.Flow
@@ -16,5 +17,9 @@ class GetMessageRepositoryImp @Inject constructor(private val  messageServices: 
     override suspend fun getSearchedUser(query: String)  : Flow<List<Response>> {
 
        return  userNameSearchServiceImp.userNameSearchService(query)
+    }
+
+    override suspend fun userUChatWith(chatId: String): ChatInfo {
+        return userNameSearchServiceImp.userUChatWith(chatId)
     }
 }
