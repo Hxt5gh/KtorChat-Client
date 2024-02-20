@@ -16,4 +16,8 @@ class SaveUserRepositoryImp @Inject constructor(private val userDetailService: U
        return userDetailService.saveImageToFirebase(uri)
     }
 
+    override suspend fun getUseById(userId: String): UserDataDto {
+       return userDetailService.getUserById(userId)
+    }
+
 }

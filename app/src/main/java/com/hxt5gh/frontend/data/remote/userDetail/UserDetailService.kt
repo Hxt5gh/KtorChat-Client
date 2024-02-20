@@ -6,4 +6,6 @@ interface UserDetailService {
     suspend fun saveUserDetail(user : UserDataDto) : Boolean
 
     suspend fun saveImageToFirebase(uri : Uri) : String?
+
+    suspend fun getUserById(userId : String) : UserDataDto
 }

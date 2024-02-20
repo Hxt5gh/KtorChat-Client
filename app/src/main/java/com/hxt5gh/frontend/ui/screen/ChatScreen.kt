@@ -32,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,14 +74,6 @@ fun ChatScreen(navController: NavHostController , onClick :(User) -> Unit) {
                 ),
                 actions = {
                     var expandState by remember { mutableStateOf(false) }
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp),
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
                    IconButton(onClick = { expandState = true }) {
                        Icon(
                            imageVector = Icons.Filled.Menu,
@@ -123,7 +114,7 @@ fun ChatScreen(navController: NavHostController , onClick :(User) -> Unit) {
                     itemsIndexed(chatScreenViewModel.chatInfo.chatList){index, item ->
                         Log.d("debug", "ChatScreen: Checking -> ${item}>")
                        // val lastMessage = getMessagesViewModel.getMessage("${Firebase.auth.uid}${item.receiver}")
-                        ChatViewItem(image = item.receiverPic.toString(), name = item.receiverName.toString() , lastMessage = item.lastMessage.toString() ){
+                        ChatViewItem(image = item.receiverPic.toString(), name = item.receiverName.toString() , lastMessage = item.lastMessage.toString() , time = item.timeStamp?.toLong() ){
                             //onClick
                             onClick(User(
                                 id = item.receiver,
@@ -144,7 +135,7 @@ fun ChatScreen(navController: NavHostController , onClick :(User) -> Unit) {
 
 }
 
-@Preview(showBackground = true )
+@Preview(showBackground = true)
 @Composable
 fun ChatPrev() {
     ChatScreen(navController = rememberNavController() , onClick = {})

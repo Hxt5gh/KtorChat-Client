@@ -96,6 +96,7 @@ fun SearchScreen(navController: NavHostController , onClick : (User) -> Unit) {
           */
     ) {
         SearchBar(
+            modifier = Modifier.fillMaxWidth(),
             query = textState,
             onQueryChange ={
                 textState = it

@@ -9,4 +9,5 @@ interface SaveUserRepository {
 
     suspend fun saveImageToFirebase(uri : Uri) : String?
 
+    suspend fun getUseById(userId : String) : UserDataDto
 }

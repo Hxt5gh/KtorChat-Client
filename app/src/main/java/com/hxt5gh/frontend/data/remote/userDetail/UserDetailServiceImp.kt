@@ -7,6 +7,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.hxt5gh.frontend.BuildConfig
 import io.ktor.client.HttpClient
+import io.ktor.client.call.receive
+import io.ktor.client.request.parameter
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpMethod
@@ -19,7 +21,7 @@ import javax.inject.Inject
 class UserDetailServiceImp @Inject constructor(val httpClient: HttpClient) : UserDetailService {
 
         private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
-         private val storageReference: StorageReference = firebaseStorage.getReference("Profile_Pic")
+         private val storageReference: StorageReference = firebaseStorage.getReference("pics")
          private val calendar : Calendar = Calendar.getInstance()
 
     override suspend fun saveUserDetail(user: UserDataDto): Boolean {
@@ -49,22 +51,45 @@ class UserDetailServiceImp @Inject constructor(val httpClient: HttpClient) : Use
 
         var imageUri : String? = null
 
-        Log.d("debug", "uploadImage")
+        Log.d("debug", "uploadImage1")
 
             storageReference.child("${calendar.timeInMillis}").putFile(uri)
                 .addOnSuccessListener {
                     storageReference.child(FirebaseAuth.getInstance().uid!!).downloadUrl.addOnSuccessListener { uri ->
                         imageUri = uri.toString()
-                        Log.d("debug", "uploadImage:  ${uri}")
+                        Log.d("debug", "uploadImage2:  ${uri}")
                     }
                 }
                 .addOnFailureListener{
+                    Log.d("debug", "uploadImage3:  ${it.message}")
                     it.printStackTrace()
-                    Log.d("debug", "uploadImage:  ${it.message}")
+                    Log.d("debug", "uploadImage4:  ${it.message}")
                 }
 
         return imageUri
 
     }
 
+    override suspend fun getUserById(userId: String) : UserDataDto {
+        return try {
+            val url = URLBuilder().apply {
+                takeFrom("http://${BuildConfig.KTOR_IP_ADDRESS_Two}")
+                path("get-user")
+            }.build()
+
+            val response: HttpResponse = httpClient.request(url) {
+                method = HttpMethod.Get
+                parameter("userid" , userId )
+            }
+
+            val data : UserDataDto = response.receive()
+            Log.d("debug", "getUserById: ${data.userId} ${data.userName} ${data.displayName} ${data.profileUri}")
+
+           data
+        } catch (e : Exception){
+            Log.d("debug", "saveUserDetail: ${e.message}")
+            e.printStackTrace()
+            UserDataDto("" ,"" ,"","")
+        }
+    }
 }
