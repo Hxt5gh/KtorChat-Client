@@ -12,7 +12,7 @@ class SaveUserRepositoryImp @Inject constructor(private val userDetailService: U
       return  userDetailService.saveUserDetail(user)
     }
 
-    override suspend fun saveImageToFirebase(uri: Uri) : String? {
+    override suspend fun saveImageToFirebase(uri: Uri) : String {
        return userDetailService.saveImageToFirebase(uri)
     }
 

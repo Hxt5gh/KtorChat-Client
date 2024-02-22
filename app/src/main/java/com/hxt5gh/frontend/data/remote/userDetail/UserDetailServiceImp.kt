@@ -15,8 +15,11 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLBuilder
 import io.ktor.http.takeFrom
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.Calendar
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class UserDetailServiceImp @Inject constructor(val httpClient: HttpClient) : UserDetailService {
 
@@ -47,27 +50,26 @@ class UserDetailServiceImp @Inject constructor(val httpClient: HttpClient) : Use
     }
 
 
-    override suspend fun saveImageToFirebase(uri : Uri)  : String? {
 
-        var imageUri : String? = null
+    override suspend fun saveImageToFirebase(uri : Uri)  : String {
 
-        Log.d("debug", "uploadImage1")
+        var imageUri : String = ""
 
-            storageReference.child("${calendar.timeInMillis}").putFile(uri)
+        return suspendCancellableCoroutine {cont->
+            storageReference.child(FirebaseAuth.getInstance().uid!!).putFile(uri)
                 .addOnSuccessListener {
                     storageReference.child(FirebaseAuth.getInstance().uid!!).downloadUrl.addOnSuccessListener { uri ->
                         imageUri = uri.toString()
-                        Log.d("debug", "uploadImage2:  ${uri}")
+                        cont.resume(imageUri)
                     }
                 }
                 .addOnFailureListener{
-                    Log.d("debug", "uploadImage3:  ${it.message}")
-                    it.printStackTrace()
-                    Log.d("debug", "uploadImage4:  ${it.message}")
+                    cont.resumeWithException(it)
                 }
 
-        return imageUri
+            cont.invokeOnCancellation { /* deregister your onSuccess and onFailure listeners here */ }
 
+        }
     }
 
     override suspend fun getUserById(userId: String) : UserDataDto {

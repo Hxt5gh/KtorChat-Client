@@ -76,7 +76,8 @@ fun ProfileScreen(navController: NavHostController, onRoute: (String) -> Unit) {
             selectedImage = uri
             if (uri != null) {
 
-                profileScreenViewModel.uploadImage(uri)
+               // profileScreenViewModel.uploadImage(uri)
+                profileScreenViewModel.onEvent(UiState.ProfilePic(uri.toString()))
             }
 
         }
@@ -100,7 +101,7 @@ fun ProfileScreen(navController: NavHostController, onRoute: (String) -> Unit) {
                         snackbarHostState.showSnackbar("${event.message}")
                     }
                     is UiEvents.OnError ->{
-
+                        snackbarHostState.showSnackbar("${event.error}")
                     }
                 }
 
@@ -172,14 +173,13 @@ fun ProfileScreen(navController: NavHostController, onRoute: (String) -> Unit) {
                         //submit
                         profileScreenViewModel.onEvent(UiState.OnClick)
                     }) {
-                        Text(text = "${profileScreenViewModel.imageUri}")
+                        Text(text = "submit")
                     }
+
                 }
             }
         }
     }
-
-
 }
 
 @Preview(
