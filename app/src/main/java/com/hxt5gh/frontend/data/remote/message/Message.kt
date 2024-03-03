@@ -20,3 +20,10 @@ data class MessageReceive(
     val message : String ,
     val timeStamp : Long
 )
+
+
+@Serializable
+data class PeerRes(
+    val userId: String,
+    val userId2: String = "Noting",
+)

@@ -6,6 +6,7 @@ import com.hxt5gh.frontend.data.remote.message.MessageApi
 import com.hxt5gh.frontend.data.remote.message.MessageServices
 import com.hxt5gh.frontend.data.remote.message.MessageServicesImp
 import com.hxt5gh.frontend.data.remote.socket.ChatSocketServiceImp
+import com.hxt5gh.frontend.data.remote.socket.PeerSocketImp
 import com.hxt5gh.frontend.data.remote.userDetail.UserDetailService
 import com.hxt5gh.frontend.data.remote.userDetail.UserDetailServiceImp
 import com.hxt5gh.frontend.data.remote.userDetail.UserNameSearchServiceImp
@@ -122,6 +123,13 @@ object AppModule {
     fun provideGetMessageRepository(messageServices: MessageServicesImp , userNameSearchServiceImp: UserNameSearchServiceImp) : GetMessageRepository{
         return GetMessageRepositoryImp(messageServices, userNameSearchServiceImp)
     }
+
+    @Provides
+    @Singleton
+    fun providePeerSocketServiceImp(httpClient: HttpClient): PeerSocketImp{
+        return PeerSocketImp(httpClient)
+    }
+
 
 
 }

@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.hxt5gh.frontend.data.remote.socket.ChatSocketServiceImp
+import com.hxt5gh.frontend.data.remote.socket.PeerSocketImp
 import com.hxt5gh.frontend.presentation.chat.SocketViewModel
 import com.hxt5gh.frontend.presentation.signin.SignInViewModel
 
@@ -30,6 +31,8 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var socketServiceImp: ChatSocketServiceImp
+    @Inject
+    lateinit var peerSocketImp : PeerSocketImp
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +63,7 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         runBlocking {
             socketServiceImp.closeSession()
+            peerSocketImp.closeSocket()
         }
     }
 }
