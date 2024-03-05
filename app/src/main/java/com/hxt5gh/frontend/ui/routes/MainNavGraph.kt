@@ -32,6 +32,9 @@ fun MainNavGraph(navController: NavHostController , onRoute : (String) -> Unit ,
                 navController ,
                 onClick = {
                     onClick(it)
+                },
+                onRoute = {
+                    onRoute(it)
                 }
             )
         }

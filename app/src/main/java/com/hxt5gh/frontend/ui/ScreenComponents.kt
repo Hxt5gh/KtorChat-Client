@@ -1,9 +1,11 @@
 package com.hxt5gh.frontend.ui
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -60,13 +62,15 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChatViewItem(
     image: String,
     name: String,
     lastMessage: String = "",
     time: Long? = 0,
-    onClick: () -> Unit
+    onClickk: () -> Unit,
+    onLongg : () -> Unit
 ) {
 
 
@@ -74,9 +78,14 @@ fun ChatViewItem(
     Column {
         Row(
             modifier = Modifier
-                .clickable {
-                    onClick()
-                }
+                .combinedClickable(
+                    onClick = {
+                              onClickk()
+                    },
+                    onLongClick = {
+                        onLongg()
+                    }
+                )
                 .heightIn()
                 .background(MaterialTheme.colorScheme.background)
                 .padding(start = 8.dp, top = 8.dp, bottom = 8.dp),
@@ -174,7 +183,7 @@ fun ChatViewItem(
 @Preview(showBackground = true)
 @Composable
 fun ChatViewItemPrev() {
-    ChatViewItem("", name = "Harry", lastMessage = "hey?", time = 1613851800000, onClick = {})
+    ChatViewItem("", name = "Harry", lastMessage = "hey?", time = 1613851800000, onClickk = {} , onLongg = {})
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

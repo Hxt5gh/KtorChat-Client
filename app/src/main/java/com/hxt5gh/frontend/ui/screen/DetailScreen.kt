@@ -123,9 +123,12 @@ fun DetailScreen(
     }
 
     LaunchedEffect(messageList.size) {
-        scope.launch {
-            // Scroll to the bottom of the LazyColumn
-            scrollState.animateScrollToItem(messageList.size - 1 )
+        if (messageList.size != 0) {
+
+            scope.launch {
+                // Scroll to the bottom of the LazyColumn
+                scrollState.animateScrollToItem(messageList.size - 1)
+            }
         }
     }
 

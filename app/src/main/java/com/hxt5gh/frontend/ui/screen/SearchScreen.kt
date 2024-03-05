@@ -1,5 +1,6 @@
 package com.hxt5gh.frontend.ui.screen
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -51,6 +52,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,10 +74,31 @@ fun SearchScreen(navController: NavHostController, onClick: (User) -> Unit) {
     val auth = Firebase.auth
     val socketViewModel: SocketViewModel = hiltViewModel()
     var messagePeer by remember { mutableStateOf("") }
+    val nameList = listOf<ProfileFruit>(
+        ProfileFruit( "Mango" , Uri.parse("android.resource://com.hxt5gh.frontend/drawable/mango").toString()),
+        ProfileFruit(  "Grapes" ,Uri.parse("android.resource://com.hxt5gh.frontend/drawable/grapes").toString()),
+        ProfileFruit( "Banana" ,Uri.parse("android.resource://com.hxt5gh.frontend/drawable/banana").toString()),
+        ProfileFruit( "Orange" ,Uri.parse("android.resource://com.hxt5gh.frontend/drawable/orange").toString()),
+        ProfileFruit( "Papaya" ,Uri.parse("android.resource://com.hxt5gh.frontend/drawable/papaya").toString()),
+        ProfileFruit( "Apple" ,Uri.parse("android.resource://com.hxt5gh.frontend/drawable/apple").toString())
+    )
 
     LaunchedEffect(key1 = true , socketViewModel.peerID){
         socketViewModel.peerID.collect{
             messagePeer = it
+            delay(2000)
+            if (messagePeer != "") {
+                val li = nameList.get(Random.nextInt(nameList.size))
+                onClick(
+                    User(
+                        id = messagePeer,
+                        name = li.userName,
+                        profileImage = li.pic,
+                        lastMessage = "",
+                        timestamp = 0
+                    )
+                )
+            }
             Log.d("TAG", "SearchScreen: peer id receved  ${messagePeer}")
         }
     }
@@ -152,7 +175,7 @@ fun SearchScreen(navController: NavHostController, onClick: (User) -> Unit) {
                     val userId = it.id
                     val displayName = it.name
                     val pic = it.profileImage
-
+                    Log.d("debug", "SearchScreen: Onclick ${userId } ${displayName}")
                     onClick(
                         User(
                             id = userId,
@@ -173,14 +196,16 @@ fun SearchScreen(navController: NavHostController, onClick: (User) -> Unit) {
         ) {
 
 
-            Box(modifier = Modifier.fillMaxSize().padding(bottom = 220.dp), contentAlignment = Alignment.BottomCenter) {
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 220.dp), contentAlignment = Alignment.BottomCenter) {
                 val col = MaterialTheme.colorScheme.primary
                 Text(
-                    text = if (isSearching){"Searching..."}else{"Search"},
+                    text = if (isSearching){"Searching..."}else{"Search ${messagePeer}"},
                     fontSize = 24.sp,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.
-                        drawBehind {
+                    modifier = Modifier
+                        .drawBehind {
                             drawCircle(
                                 color = col,
                                 radius = 220f
@@ -199,7 +224,6 @@ fun SearchScreen(navController: NavHostController, onClick: (User) -> Unit) {
                                 closeConnectionJob?.cancel() // Cancel any existing job
                                 socketViewModel.closePeer()
                             }
-
                         }
                 )
 
@@ -220,4 +244,9 @@ data class UserInfo(
     val userid: String,
     val displayName: String,
     val profileImage: String?,
+)
+
+data class ProfileFruit(
+    val userName :String,
+    val pic : String
 )

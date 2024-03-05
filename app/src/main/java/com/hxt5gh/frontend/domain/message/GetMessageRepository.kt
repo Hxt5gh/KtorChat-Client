@@ -13,4 +13,6 @@ interface GetMessageRepository {
 
     suspend fun userUChatWith(chatId : String) : ChatInfo
 
+    suspend fun deleteUserChat(userId: String, chatId: String)  : Boolean
+
 }

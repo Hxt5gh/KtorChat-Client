@@ -6,4 +6,6 @@ interface UserNameSearchService {
     suspend fun userNameSearchService(query : String ) : Flow<List<Response>>
 
     suspend fun userUChatWith(chatId : String) : ChatInfo
+
+    suspend fun deleteUserChat(userId : String , chatId: String ) : Boolean
 }

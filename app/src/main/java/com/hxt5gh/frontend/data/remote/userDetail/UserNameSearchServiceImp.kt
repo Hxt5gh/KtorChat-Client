@@ -87,6 +87,20 @@ class UserNameSearchServiceImp @Inject constructor(private val httpClient: HttpC
 
     }
 
+    override suspend fun deleteUserChat(userId: String, chatId: String)  : Boolean{
+        val url = URLBuilder().apply {
+            takeFrom("http://${BuildConfig.KTOR_IP_ADDRESS_Two}")
+            path("delete-chat")
+        }.build()
+
+        val response: HttpResponse = httpClient.request(url) {
+            method = HttpMethod.Get
+            parameter("userId" , userId )
+            parameter("chatId" , chatId )
+        }
+        return response.status == HttpStatusCode.OK
+    }
+
 }
 
 @Serializable

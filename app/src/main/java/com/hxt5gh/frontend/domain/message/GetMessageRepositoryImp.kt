@@ -22,4 +22,8 @@ class GetMessageRepositoryImp @Inject constructor(private val  messageServices: 
     override suspend fun userUChatWith(chatId: String): ChatInfo {
         return userNameSearchServiceImp.userUChatWith(chatId)
     }
+
+    override suspend fun deleteUserChat(userId: String, chatId: String): Boolean {
+        return userNameSearchServiceImp.deleteUserChat(userId , chatId)
+    }
 }

@@ -11,6 +11,7 @@ import com.google.firebase.auth.auth
 import com.hxt5gh.frontend.data.remote.userDetail.ChatInfo
 import com.hxt5gh.frontend.domain.message.GetMessageRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,6 +33,15 @@ class ChatScreenViewModel @Inject constructor(private val  getMessageRepositoryI
     {
         viewModelScope.launch {
             chatInfo = getMessageRepositoryImp.userUChatWith(chatId)
+        }
+    }
+
+    fun deleteUserChat(userId : String , chatId : String)
+    {
+        viewModelScope.launch {
+          getMessageRepositoryImp.deleteUserChat(userId , chatId)
+            delay(200)
+            userUChatWith(Firebase.auth.uid.toString())
         }
     }
 
